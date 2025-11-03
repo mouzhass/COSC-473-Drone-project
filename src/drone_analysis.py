@@ -16,7 +16,7 @@ spark = (
         .config("spark.hadoop.fs.s3a.endpoint", "s3.amazonaws.com")
         .getOrCreate()
 )
-#df = spark.read.csv("drone_flight_log_manualFlight_3.csv",header=True, inferSchema=True) #wncomment when running locally
+#df = spark.read.csv("drone_flight_log_manualFlight_3.csv",header=True, inferSchema=True) #uncomment when running locally
 
 s3_path = "s3a://drone-flight-data-hassan-oliver/drone_flight_log_manualFlight_3.csv"
 df = spark.read.csv(s3_path, header=True, inferSchema=True)
