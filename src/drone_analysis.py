@@ -1,17 +1,25 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import avg, variance, min as spark_min, max as spark_max, col
 
-# Initialize Spark Session
-spark = SparkSession.builder \
-    .appName("Drone Flight Analysis") \
-    .master("local[*]") \
-    .getOrCreate()
-
+spark = (
+    SparkSession.builder
+        .appName("Drone Flight Analysis")
+        .master("local[*]")
+        .config("spark.jars.packages",
+                "org.apache.hadoop:hadoop-aws:3.3.4,"
+                "com.amazonaws:aws-java-sdk-bundle:1.12.772")
+        .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
+        .config("spark.hadoop.fs.s3a.aws.credentials.provider",
+                "com.amazonaws.auth.DefaultAWSCredentialsProviderChain")
+        .config("spark.hadoop.fs.s3a.endpoint", "s3.amazonaws.com")
+        .getOrCreate()
+)
 spark.conf.set("spark.sql.debug.maxToStringFields", "100")
 
-# Read CSV file (local)
-df = spark.read.csv("drone_flight_log_manualFlight_3.csv",
-                    header=True, inferSchema=True)
+# Use s3a:// (not s3://)
+s3_path = "s3a://drone-flight-data-hassan-oliver/drone_flight_log_manualFlight_3.csv"
+
+df = spark.read.csv(s3_path, header=True, inferSchema=True)
 
 # Data quality analysis
 print("\n" + "=" * 70)
