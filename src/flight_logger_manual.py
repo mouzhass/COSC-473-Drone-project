@@ -20,7 +20,6 @@ with open(LOG_FILE, "w", newline="") as f:
 
 
    start = time.time()
-   # for vertical speed estimate
    prev_h = drone.get_height("cm")
    prev_t = start
 
@@ -42,11 +41,10 @@ with open(LOG_FILE, "w", newline="") as f:
            temp  = drone.get_drone_temperature()
 
 
-           # New: optical-flow velocities (cm/s) and speeds
-           vx = drone.get_flow_velocity_x()   # +X forward/back
-           vy = drone.get_flow_velocity_y()   # +Y left/right
+           vx = drone.get_flow_velocity_x() # +X forward/back
+           vy = drone.get_flow_velocity_y() # +Y left/right
            speed_xy = math.hypot(vx, vy)
-           vz = (h - prev_h) / dt             # vertical speed (cm/s)
+           vz = (h - prev_h) / dt # vertical speed (cm/s)
 
 
            writer.writerow([t, h, roll, pitch, yaw, batt, acc, temp, speed_xy, vz])
