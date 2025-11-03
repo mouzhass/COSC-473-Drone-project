@@ -21,6 +21,7 @@ s3_path = "s3a://drone-flight-data-hassan-oliver/drone_flight_log_manualFlight_3
 df = spark.read.csv(s3_path, header=True, inferSchema=True)
 
 spark.conf.set("spark.sql.debug.maxToStringFields", "100")
+
 # Data quality analysis
 print("\n" + "=" * 70)
 print("DATA QUALITY ANALYSIS")
