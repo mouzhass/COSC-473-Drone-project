@@ -40,7 +40,7 @@ with open(LOG_FILE, "w", newline="") as f:
            # Horizontal speed
            vx = drone.get_flow_velocity_x()      # +X forward/back velocity
            vy = drone.get_flow_velocity_y()      # +Y left/right velocity
-           speed_xy = math.hypot(vx, vy)      # horizontal speed total calculation
+           speed_xy = math.hypot(vx, vy)      # since where only finding the horizontal speed we are using Pythagorean theorem to calculate speed
            # Vertical speed from height derivative
            vz = (h - prev_h) / dt
 
