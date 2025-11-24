@@ -1,7 +1,7 @@
 import time, csv, math
 from codrone_edu.drone import *
 
-LOG_FILE = "drone_flight_log_manualFlight_3.csv"  # Output CSV path
+LOG_FILE = "drone_flight_log_manualFlight_4.csv"  # Output CSV path
 SAMPLE_RATE_HZ = 10                               # Target log frequency (samples/sec)
 
 drone = Drone()   # Create drone
