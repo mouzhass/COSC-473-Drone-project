@@ -23,11 +23,9 @@ telemetry_df = (raw_df
     .select(from_json(col("value").cast("string"), schema).alias("data"))
     .select("data.*"))
 
-# Convert numeric epoch seconds -> proper TIMESTAMP for windowing
 telemetry_with_ts = (
     telemetry_df
         .withColumn("event_time", to_timestamp(from_unixtime(col("timestamp"))))
-        # allow 30 seconds of lateness; > window size (10s) is typical
         .withWatermark("event_time", "30 seconds")
 )
 

@@ -62,7 +62,7 @@ with open(LOG_FILE, "w", newline="") as f:
            # Vertical speed from height derivative
            vz = (h - prev_h) / dt
 
-           # --- Send required telemetry to Kafka ---
+           # send required telemetry to Kafka ---
            kafka_msg = {
                "timestamp": now,              # epoch seconds
                "height": float(h),           # cm
@@ -73,40 +73,33 @@ with open(LOG_FILE, "w", newline="") as f:
            }
            producer.send(KAFKA_TOPIC, kafka_msg)
 
-           # --- Write full metrics row to CSV ---
+           # write a row and save it
            writer.writerow([t, h, roll, pitch, yaw, batt, acc, temp, speed_xy, vz])
            f.flush()  # force write to disk
 
-           # Print output to console for monitoring
            print(
                f"t={t:5.2f}s  h={h:6.1f}cm  roll={roll:6.1f}  pitch={pitch:6.1f}  "
                f"yaw={yaw:6.1f}  batt={batt:3d}%  ax={acc:6.2f}  temp={temp}  "
                f"vxy={speed_xy:6.1f}  vz={vz:6.1f}"
            )
 
-           # Update for next loop
            prev_h = h
            prev_t = now
-
-           # Keep SAMPLE_RATE_HZ timing (this controls readings per second)
            time.sleep(1 / SAMPLE_RATE_HZ)
 
    except KeyboardInterrupt:
-       #stop when user presses Ctrl+C
        print("\nStop requested.")
    finally:
-       # Flush Kafka and land/close connection safely
+       # flush Kafka and land/close connection safely
        try:
            producer.flush()
        except Exception:
-           # Ignore producer shutdown errors
            pass
 
        try:
            drone.land()
            drone.close()
        except Exception:
-           # Ignore any shutdown errors to avoid masking the save message
            pass
 
        print(f"Saved: {LOG_FILE}")
